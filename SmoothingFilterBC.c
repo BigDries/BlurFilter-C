@@ -1,51 +1,118 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define BMPINPUT "test.bmp"
-
+#define BMPOUTPUT "out.bmp"
 
 int main(int argc, char const *argv[])
 {
-    FILE * inputBMP = fopen(BMPINPUT, "rb");
+    FILE * inputFilePointer = fopen(BMPINPUT, "rb");
+    FILE* outputFilePointer = fopen(BMPOUTPUT, "wb");
+
     unsigned char header[54] = {0};
     signed int hoogte = 0;
     signed int breedte = 0;
     unsigned char * pixels = NULL;
     int totaalAantalPixels = 0;
+    int i;
 
-    if(inputBMP == NULL)
+    if(inputFilePointer == NULL)
     {
         printf("%s\n", "ERROR: can't open the file");
         return -1;
     }
 
-    fread(header, 1, 54, inputBMP);
+    fread(header, 1, 54, inputFilePointer);
 
     breedte = header[21] << 24 | header[20] << 16 | header[19] << 8 | header[18]; 
-    printf("De breedte van mijn afbeelding is = %d\n", breedte);
+        printf("De breedte van mijn afbeelding is = %d\n", breedte);
     hoogte = header[25] << 24 | header[24] << 16 | header[23] << 8 | header[22]; 
-    printf("De hoogte van mijn afbeelding is = %d\n", hoogte);
+        printf("De hoogte van mijn afbeelding is = %d\n", hoogte);
 
     totaalAantalPixels = breedte * hoogte;
     pixels = (unsigned char *) malloc(totaalAantalPixels*3);
+
     if(pixels == NULL)
     {
         printf("ERROR: memory allocation Failed\n");
         return -2;
     }
 
-    fread(pixels, 1, totaalAantalPixels*3, inputBMP);
-    printf("INFO: Heap memory allocated = %d (bytes)\n", totaalAantalPixels*3);
+    fread(pixels, 1, totaalAantalPixels*3, inputFilePointer);
+        printf("INFO: Heap memory allocated = %d (bytes)\n", totaalAantalPixels*3);
 
-    fclose(inputBMP);
-    printf("INFO: File %s CLOSED\n", BMPINPUT);
+    fclose(inputFilePointer);
+        printf("INFO: File %s CLOSED\n", BMPINPUT);
 
     //----------------------------------------
 
+    FILE* outputFilePointer = fopen(BMPOUTPUT, "wb");// maak een file pointer naar een nieuwe output file
+    if(outputFilePointer == NULL)  //Test of het maken van de file gelukt is!
+    {
+        printf("Something went wrong while trying to open %s\n", BMPOUTPUT);
+        exit(EXIT_FAILURE);
+    }        
+
+    #ifdef __DEBUG
+        printf("DEBUG info: Opening File OK: %s\n", BMPOUTPUTFILE);
+    #endif
+
+    unsigned char bmpHeader[54]; // voorzie een array van 54-bytes voor de BMP Header
+    fread(bmpHeader, sizeof(unsigned char), 54, inputFilePointer); // lees de 54-byte header
+
+    //Informatie uit de header (wikipedia)
+    // haal de hoogte en breedte uit de header
+    int breedte = *(int*)&bmpHeader[18];
+    int hoogte = *(int*)&bmpHeader[22];
+
+    #ifdef __DEBUG
+        printf("DEBUG info: breedte = %d\n", breedte);
+        printf("DEBUG info: hoogte = %d\n", hoogte);
+    #endif
+
+    int imageSize = 3 * breedte * hoogte; //ieder pixel heeft 3 byte data: rood, groen en blauw (RGB)
+    unsigned char* inputPixels = (unsigned char *) calloc(imageSize, sizeof(unsigned char)); // allocate een array voor alle pixels
+
+    fread(inputPixels, sizeof(unsigned char), imageSize, inputFilePointer); // Lees alle pixels (de rest van de file
+    fclose(inputFilePointer);
+
+    //BGR --> RGB
+    for(i = 0; i < imageSize-3; i += 3)
+    {
+        unsigned char tmp = inputPixels[i];
+        inputPixels[i] = inputPixels[i+2];
+        inputPixels[i+2] = tmp;
+    }
+
+    //Maak de output file:
+    i = 0;
+    for(i = 0; i < 52; i++) //schrijf de header
+    {
+        putc(bmpHeader[i], outputFilePointer);
+    }
     
-    
+    unsigned char* outputPixels = (unsigned char *) calloc(imageSize, sizeof(unsigned char)); // allocate een array voor alle pixels
+    i = 0 ;
+    for(i = 0; i < imageSize; i++)
+    {
+        outputPixels[i] = 255 - inputPixels[i];
+        putc(outputPixels[i], outputFilePointer);
+    }
+
+    fwrite(outputFilePointer, sizeof(unsigned char), imageSize, outputFilePointer); //schrijf de pixels naar de file
+
+    #ifdef __DEBUG
+        printf("DEBUG info: output file generated\n");
+    #endif
+
+    fclose(outputFilePointer);
+    fclose(inputFilePointer);
+    free(inputPixels);
+        
     //----------------------------------------
     free(pixels);
-    printf("INFO: Heap memory Freed = %d (bytes)\n", totaalAantalPixels*3);
+        printf("INFO: Heap memory Freed = %d (bytes)\n", totaalAantalPixels*3);
+
     return 0;
 }
