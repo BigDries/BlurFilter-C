@@ -53,7 +53,7 @@ int main(int argc, char const *argv[])
         exit(EXIT_FAILURE);
     }        
 
-    #ifdef __DEBUG
+    #ifdef __DEBUG   
         printf("DEBUG info: Opening File OK: %s\n", BMPOUTPUTFILE);
     #endif
 
