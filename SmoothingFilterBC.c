@@ -8,7 +8,6 @@
 int main(int argc, char const *argv[])
 {
     FILE * inputFilePointer = fopen(BMPINPUT, "rb");
-    FILE* outputFilePointer = fopen(BMPOUTPUT, "wb");
 
     unsigned char header[54] = {0};
     signed int hoogte = 0;
@@ -60,7 +59,7 @@ int main(int argc, char const *argv[])
 
     unsigned char bmpHeader[54]; // voorzie een array van 54-bytes voor de BMP Header
     fread(bmpHeader, sizeof(unsigned char), 54, inputFilePointer); // lees de 54-byte header
-
+/*
     //Informatie uit de header (wikipedia)
     // haal de hoogte en breedte uit de header
     int breedte = *(int*)&bmpHeader[18];
@@ -70,11 +69,11 @@ int main(int argc, char const *argv[])
         printf("DEBUG info: breedte = %d\n", breedte);
         printf("DEBUG info: hoogte = %d\n", hoogte);
     #endif
-
+*/
     int imageSize = 3 * breedte * hoogte; //ieder pixel heeft 3 byte data: rood, groen en blauw (RGB)
     unsigned char* inputPixels = (unsigned char *) calloc(imageSize, sizeof(unsigned char)); // allocate een array voor alle pixels
 
-    fread(inputPixels, sizeof(unsigned char), imageSize, inputFilePointer); // Lees alle pixels (de rest van de file
+    fread(inputPixels, sizeof(unsigned char), imageSize, inputFilePointer); // Lees alle pixels (de rest van de file)
     fclose(inputFilePointer);
 
     //BGR --> RGB
