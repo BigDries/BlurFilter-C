@@ -122,6 +122,10 @@ void blurfilter()
     
     return 0;
 }
+
+
+//still not merged with existing blurfilter project
+// +3 points for extra funtions for BMPs
 /*
 void BlackAndWhitefilter()
 {
