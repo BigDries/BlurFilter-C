@@ -117,10 +117,87 @@ int main(int argc, char const *argv[])
 }
 
 // filter formula 
-void filter()
+void blurfilter()
 {
     
-
-
     return 0;
 }
+/*
+void BlackAndWhitefilter()
+{
+    unsigned char greyScalePixel(RGB rgb)
+    {
+        return ((rgb.red*0.3)+(rgb.green*0.6)+(rgb.blue*0.1));
+    }
+
+    void imageToGrayScale(Image image)
+    {
+        for(int i = 0;i<image.height;i++)
+        {
+            for(int j=0;j<image.width;j++)
+            {
+                image.rgb[i][j].red = greyScalePixel(image.rgb[i][j]);
+                image.rgb[i][j].blue = greyScalePixel(image.rgb[i][j]);
+                image.rgb[i][j].green = greyScalePixel(image.rgb[i][j]);
+            }
+        }
+
+    }
+
+    FILE *fpw = fopen("bw-pic.bmp","wb");
+    if(fpw == NULL)
+    {
+        return;
+    }
+
+    imageToGrayScale(image);
+
+    fwrite(bmp_header.name,2*sizeof(char),1,fpw);
+    fwrite(&bmp_header.size,3*sizeof(int),1,fpw);
+
+    fwrite(&image_header,sizeof(struct imageHeader),1,fpw);
+
+
+    for(int i=image.height-1; i>=0;i--)
+    {
+        fwrite(image.rgb[i],image.width,sizeof(struct RGB),fpw);
+    }
+    fclose(fpw);
+}
+
+void flipbmpfilter(image image)
+{
+    for(int i=0;i<image.height;i++)
+    {
+        for(int j =0;j<image.width/2;j++)
+        {
+            RGB temp = image.rgb[i][j];
+            image.rgb[i][j] = image.rgb[i][image.width-j-1];
+            image.rgb[i][image.width-j-1] = temp;
+        }
+    }
+
+    void createFlippedImage(Image image,BMP_Header bmp_header,imageHeader image_header)
+    {
+        FILE *fpw = fopen("flipped.bmp","wb");
+
+        if(fpw == NULL)
+        {
+            return ;
+        }
+    }
+}
+
+    flipImage(image);
+
+    fwrite(bmp_header.name,2*sizeof(char),1,fpw);
+    fwrite(&bmp_header,3*sizeof(int),1,fpw);
+
+    fwrite(&image_header,sizeof(struct imageHeader),1,fpw);
+
+    for(int i=image.height-1; i>=0;i--){
+        fwrite(image.rgb[i],image.width,sizeof(struct RGB),fpw);
+    }
+    fclose(fpw);
+
+    */
