@@ -80,3 +80,5 @@ int main()
 		
 	fclose(fOut);
 	fclose(fIn);
+	return 0;
+}
