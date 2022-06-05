@@ -1,2 +1,2 @@
-# SmoothingFilter-C
+# BlurFilter-C
 c
