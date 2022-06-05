@@ -5,7 +5,7 @@ int main()
 {
 							
 
-	FILE *fIn = fopen("images/test.bmp","r");			// Input File naam
+	FILE *fIn = fopen("test.bmp","r");			// Input File naam
 	FILE *fOut = fopen("out.bmp","w+");		    	// Output File naam
 
 	int i,j,y, x;

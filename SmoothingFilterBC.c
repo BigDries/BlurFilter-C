@@ -59,17 +59,7 @@ int main(int argc, char const *argv[])
 
     unsigned char bmpHeader[54]; // voorzie een array van 54-bytes voor de BMP Header
     fread(bmpHeader, sizeof(unsigned char), 54, inputFilePointer); // lees de 54-byte header
-/*
-    //Informatie uit de header (wikipedia)
-    // haal de hoogte en breedte uit de header
-    int breedte = *(int*)&bmpHeader[18];
-    int hoogte = *(int*)&bmpHeader[22];
 
-    #ifdef __DEBUG
-        printf("DEBUG info: breedte = %d\n", breedte);
-        printf("DEBUG info: hoogte = %d\n", hoogte);
-    #endif
-*/
     int imageSize = 3 * breedte * hoogte; //ieder pixel heeft 3 byte data: rood, groen en blauw (RGB)
     unsigned char* inputPixels = (unsigned char *) calloc(imageSize, sizeof(unsigned char)); // allocate een array voor alle pixels
 
@@ -120,7 +110,7 @@ int main(int argc, char const *argv[])
 void blurfilter()
 {
 	
-	FILE *fIn = fopen("images/test.bmp","r");			// Input File naam
+	FILE *fIn = fopen("test.bmp","r");			// Input File naam
 	FILE *fOut = fopen("out.bmp","w+");		    	// Output File naam
 
 	int i,j,y, x;
@@ -146,7 +136,7 @@ void blurfilter()
 	printf("breedte: %d\n",breedte);
 	printf("hoogte: %d\n",hoogte );
 
-	int size = hoogte*breedte;					//  berekend groootte van foto
+	int size = hoogte*breedte;					//  berekend grootte van foto
 
 	unsigned char buffer[size][3];					// slaat input data op
 	unsigned char out[size][3];					// slaat output data op
